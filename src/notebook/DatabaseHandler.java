@@ -18,37 +18,32 @@ public class DatabaseHandler {
         try
         {
             Class.forName("org.sqlite.JDBC");
-            Connection conn = DriverManager.getConnection(url);
-            if(conn!= null)
+            conn = DriverManager.getConnection(url);
+            if(conn!=null)
             {
                 DatabaseMetaData meta = conn.getMetaData();
                 System.out.println("Database: "+meta.getDriverName());
                 System.out.println("Database successfully created!");
+                createTable();
             }
         }
         catch(SQLException e)
         {
             System.out.println(e.getMessage());
         }
-        createTable();
         return conn;
     }
     
     public void createTable()
     {
-        String table_create = "CREATE TABLE IF NOT EXISTS users (note text, created_at datetime)";
-        
         try
         {
-        Statement create_table = conn.createStatement();
-        if(create_table.execute(table_create))
-            System.err.println("Successfully created users table.");
-        else
-            System.out.println("Table found");
+            Statement stm = conn.createStatement();
+            stm.execute("create table if not exists all_users (username text, passw text)");
         }
         catch(SQLException e)
         {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
     
