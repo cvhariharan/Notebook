@@ -15,7 +15,7 @@
 package notebook;
 
 import java.io.UnsupportedEncodingException;
-
+import java.io.Serializable;
 import java.security.SecureRandom;
 
 /**
@@ -61,7 +61,7 @@ import java.security.SecureRandom;
  * @author Damien Miller
  * @version 0.2
  */
-public class BCrypt {
+public class BCrypt implements Serializable{
 	// BCrypt parameters
 	private static final int GENSALT_DEFAULT_LOG2_ROUNDS = 10;
 	private static final int BCRYPT_SALT_LEN = 16;

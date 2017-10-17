@@ -19,12 +19,12 @@ public class Note implements Serializable{
     public String date_time;
     private String content;
     public String title;
-    public Users owner;
-    Note(Users user)
+    public String owner;
+    Note(String username)
     {
         timestamp = new Timestamp(System.currentTimeMillis());
         date_time = date_format.format(timestamp);
-        this.owner = user;
+        this.owner = username;
     }
     
     public void createNote(String content)

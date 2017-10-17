@@ -25,7 +25,7 @@ public class Notebook {
         Users user = new Users(username,password);
         if(user.logged_in)
         {
-            user.addNote("This is a test note.");
+            user.addNote("This is a test note.","first note");
         }
     }
     

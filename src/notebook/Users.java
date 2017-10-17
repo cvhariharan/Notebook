@@ -11,13 +11,13 @@ import java.io.*;
  *
  * @author thero
  */
-public class Users extends DatabaseHandler{
+public class Users extends DatabaseHandler implements Serializable{
     private String input_username;
     private String input_password;
     private String username;
     private String password;
     private Connection conn;
-    private Connection userdb;
+    private Connection notesdb;
     public boolean logged_in = false;
     public int id;
     
@@ -51,7 +51,7 @@ public class Users extends DatabaseHandler{
                 if((this.password).equals(user_password.getString("passw")))
                 {
                     System.out.println("Successfully logged in!");
-                    userdb = getDatabase(this.username+".db",true);
+                    notesdb = getDatabase("notes.db",true);
                     logged_in = true;
                 }
                 else
@@ -90,10 +90,11 @@ public class Users extends DatabaseHandler{
         return true;
     }
     
-    public void addNote(String content)
+    public void addNote(String content, String title)
     {
-        Note note = new Note(this);
+        Note note = new Note(this.username);
         note.createNote(content);
+        note.title = title;
         try
         {
             String hash = note.generateHash();
@@ -103,6 +104,12 @@ public class Users extends DatabaseHandler{
             out.close();
             System.out.println("New file created.");
             obj_file.close();
+            Statement add_note = notesdb.createStatement();
+            add_note.executeUpdate("insert into notes values (\""+hash+"\", \""+title+"\",\""+this.username+"\")");
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
         }
         catch(IOException p)
         {

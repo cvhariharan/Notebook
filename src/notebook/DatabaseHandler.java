@@ -24,7 +24,7 @@ public class DatabaseHandler {
                 DatabaseMetaData meta = conn.getMetaData();
                 System.out.println("Database: "+meta.getDriverName());
                 System.out.println("Database successfully created!");
-                createTable(userdb);
+                createTable(userdb); //If userdb is true it creates a user database
             }
         }
         catch(SQLException e)
@@ -42,7 +42,7 @@ public class DatabaseHandler {
             if(!userdb)
                 stm.execute("create table if not exists all_users (username text, passw text)");
             else
-                stm.execute("create table if not exists notes (hash_id text, contents text, created_at text)");
+                stm.execute("create table if not exists notes (hash_id text, title text, owner text)");
         }
         catch(SQLException e)
         {
