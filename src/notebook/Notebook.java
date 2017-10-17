@@ -14,6 +14,7 @@ public class Notebook {
     /**
      * @param args the command line arguments
      */
+    static Note note;
     public static void main(String[] args) {
         // TODO code application logic here
         Scanner in = new Scanner(System.in);
@@ -22,6 +23,10 @@ public class Notebook {
         System.out.println("Password: ");
         String password = in.next();
         Users user = new Users(username,password);
+        if(user.logged_in)
+        {
+            user.addNote("This is a test note.");
+        }
     }
     
 }

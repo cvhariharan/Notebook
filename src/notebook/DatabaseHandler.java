@@ -12,7 +12,7 @@ import java.sql.*;
 public class DatabaseHandler {
     
     private Connection conn;
-    public Connection getDatabase(String name) throws ClassNotFoundException
+    public Connection getDatabase(String name, boolean userdb) throws ClassNotFoundException
     {
         String url = "jdbc:sqlite:D:/sqlite/" + name;
         try
@@ -24,7 +24,7 @@ public class DatabaseHandler {
                 DatabaseMetaData meta = conn.getMetaData();
                 System.out.println("Database: "+meta.getDriverName());
                 System.out.println("Database successfully created!");
-                createTable();
+                createTable(userdb);
             }
         }
         catch(SQLException e)
@@ -34,12 +34,15 @@ public class DatabaseHandler {
         return conn;
     }
     
-    public void createTable()
+    public void createTable(boolean userdb)
     {
         try
         {
             Statement stm = conn.createStatement();
-            stm.execute("create table if not exists all_users (username text, passw text)");
+            if(!userdb)
+                stm.execute("create table if not exists all_users (username text, passw text)");
+            else
+                stm.execute("create table if not exists notes (hash_id text, contents text, created_at text)");
         }
         catch(SQLException e)
         {

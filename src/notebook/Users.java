@@ -6,6 +6,7 @@
 package notebook;
 import java.sql.*;
 import java.util.Scanner;
+import java.io.*;
 /**
  *
  * @author thero
@@ -16,6 +17,7 @@ public class Users extends DatabaseHandler{
     private String username;
     private String password;
     private Connection conn;
+    private Connection userdb;
     public boolean logged_in = false;
     public int id;
     
@@ -33,7 +35,7 @@ public class Users extends DatabaseHandler{
         Scanner sc = new Scanner(System.in);
         try
         {
-        conn = getDatabase("users.db");
+        conn = getDatabase("users.db",false);
         }
         catch(ClassNotFoundException e)
         {
@@ -49,6 +51,7 @@ public class Users extends DatabaseHandler{
                 if((this.password).equals(user_password.getString("passw")))
                 {
                     System.out.println("Successfully logged in!");
+                    userdb = getDatabase(this.username+".db",true);
                     logged_in = true;
                 }
                 else
@@ -80,10 +83,30 @@ public class Users extends DatabaseHandler{
         {
             s.printStackTrace();
         }
-        catch(Exception p)
+        catch(ClassNotFoundException c)
+        {
+            c.printStackTrace();
+        }
+        return true;
+    }
+    
+    public void addNote(String content)
+    {
+        Note note = new Note(this);
+        note.createNote(content);
+        try
+        {
+            String hash = note.generateHash();
+            FileOutputStream obj_file = new FileOutputStream("data/"+hash);
+            ObjectOutputStream out = new ObjectOutputStream(obj_file);
+            out.writeObject(note);
+            out.close();
+            System.out.println("New file created.");
+            obj_file.close();
+        }
+        catch(IOException p)
         {
             p.printStackTrace();
         }
-        return true;
     }
 }
