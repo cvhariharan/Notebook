@@ -20,16 +20,20 @@ public class Note implements Serializable{
     private String content;
     public String title;
     public String owner;
-    Note(String username)
+    public String hash;
+    Note(String username,String title)
     {
         timestamp = new Timestamp(System.currentTimeMillis());
         date_time = date_format.format(timestamp);
         this.owner = username;
+        this.title = title;
+        
     }
     
     public void createNote(String content)
     {
         this.content = content;
+        generateHash();
     }
     
     public void appendNote(String add)
@@ -43,11 +47,12 @@ public class Note implements Serializable{
     
     public String generateHash()
     {
-        String date_and_content = this.date_time + this.content;
-        String hash = BCrypt.hashpw(date_and_content,BCrypt.gensalt());
+        String date_and_title = this.date_time + this.title;
+        String hash = BCrypt.hashpw(date_and_title,BCrypt.gensalt());
         hash = hash.replace("\\", "s");
         hash = hash.replace("/", "s");
         hash = hash.replace(".", "s");
+        this.hash = hash;
         return hash;
     }
 }

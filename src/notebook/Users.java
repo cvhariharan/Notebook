@@ -92,7 +92,7 @@ public class Users extends DatabaseHandler implements Serializable{
     
     public void addNote(String content, String title)
     {
-        Note note = new Note(this.username);
+        Note note = new Note(this.username,title);
         note.createNote(content);
         note.title = title;
         try
@@ -117,4 +117,50 @@ public class Users extends DatabaseHandler implements Serializable{
         }
     }
     
+    public void addTodo(String content,String title,String file_hash,boolean existing)
+    {
+        if(!existing)
+        {
+            try
+            {
+                ToDo todo = new ToDo(this.username,title);
+                todo.createNote(content);
+                String hash = todo.generateHash();
+                FileOutputStream obj_file = new FileOutputStream("data/"+hash);
+                ObjectOutputStream out = new ObjectOutputStream(obj_file);
+                out.writeObject(todo);
+                out.close();
+                obj_file.close();
+            }
+            catch(IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            try
+            {
+                FileInputStream obj_file = new FileInputStream("data/"+file_hash);
+                ObjectInputStream in = new ObjectInputStream(obj_file);
+                ToDo todo = (ToDo) in.readObject();
+                todo.createNote(content);
+                todo.showTasks();
+            }
+            catch(FileNotFoundException e)
+            {
+                System.out.println("You sure the ToDo list exists?");
+                System.out.println(e.getMessage());
+            }
+            catch(ClassNotFoundException e)
+            {
+                System.out.println(e.getMessage());
+            }
+            catch(IOException e)
+            {
+                System.out.println(e.getMessage());
+            }
+            
+        }
+    }
 }

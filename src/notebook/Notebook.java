@@ -25,8 +25,8 @@ public class Notebook {
         Users user = new Users(username,password);
         if(user.logged_in)
         {
-            user.addNote("This is a test note.","first note");
-            user.addReminder("Test reminder","Test2","2017-10-21 18:00:00");
+            
+            user.addTodo("Just checking","Test2","$2a$10$XOxJalyO577lA7cfI18j7u25vgJAsSrWsthZvKgOF9Wv7nm41Bs1m",true);
         }
     }
     
