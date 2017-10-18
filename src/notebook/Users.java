@@ -116,4 +116,22 @@ public class Users extends DatabaseHandler implements Serializable{
             p.printStackTrace();
         }
     }
+    
+    public void addReminder(String content, String title,String time)
+    {
+        Reminder reminder = new Reminder(this.username,time);
+        reminder.createNote(content);
+        reminder.title = title;
+        try
+        {
+            String hash = reminder.generateHash();
+            System.out.println("New file created.");
+            Statement add_note = notesdb.createStatement();
+            add_note.executeUpdate("insert into reminders values (\""+title+"\",\""+reminder.returnTime()+"\")");
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+    }
 }

@@ -26,6 +26,7 @@ public class Notebook {
         if(user.logged_in)
         {
             user.addNote("This is a test note.","first note");
+            user.addReminder("Test reminder","Test2","2017-10-21 18:00:00");
         }
     }
     

@@ -45,6 +45,9 @@ public class Note implements Serializable{
     {
         String date_and_content = this.date_time + this.content;
         String hash = BCrypt.hashpw(date_and_content,BCrypt.gensalt());
+        hash = hash.replace("\\", "s");
+        hash = hash.replace("/", "s");
+        hash = hash.replace(".", "s");
         return hash;
     }
 }
