@@ -52,7 +52,7 @@ public class DatabaseHandler {
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
     
@@ -103,4 +103,37 @@ public class DatabaseHandler {
         }
         return results;
     }*/
+    
+    public boolean insertInto(String db_name,String table_name,String param1, String param2, String param3,int param4)
+    {
+        String sql;
+        boolean notes = db_name.equals("notes.db")?true:false;
+        try
+        {
+            Connection conn = getDatabase(db_name,notes);
+            Statement stm = conn.createStatement();
+            if(notes)
+            {
+            if(table_name.equals("categories"))
+                sql = "insert into "+table_name+" values ('"+param1+"', '"+param2+"', '"+param3+"', '"+param4+"')";
+            else
+                sql = "insert into "+table_name+" values ('"+param1+"', '"+param2+"', '"+param3+"')";
+            }
+            else
+                sql = "insert into "+table_name+" values ('"+param1+"', '"+param2+"')";
+            stm.executeUpdate(sql);
+            stm.close();
+            conn.close();
+        }  
+        catch(SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        catch(ClassNotFoundException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        return true;
+    }
+    
 }

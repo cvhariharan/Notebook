@@ -59,6 +59,7 @@ public class Note implements Serializable{
     
     public final void findCategory()
     {
+        DatabaseHandler handler = new DatabaseHandler();
         String temp = this.content;
         int cat_index = 0;
         while(temp.indexOf("#",cat_index)>=0)
@@ -76,8 +77,9 @@ public class Note implements Serializable{
             if(!categories.contains(hashtag))
             {
                 categories.add(hashtag);
-                String sql = "insert into categories values ('"+this.hash+"','"+hashtag+"', '"+this.owner+"', '"+0+"')";
-                DatabaseHandler.executeUpdateDb(sql,"notes.db");
+                /*String sql = "insert into categories values ('"+this.hash+"','"+hashtag+"', '"+this.owner+"', '"+0+"')";
+                DatabaseHandler.executeUpdateDb(sql,"notes.db");*/
+                handler.insertInto("notes.db", "categories", this.hash,hashtag,this.owner,0);
             }
         }
     }

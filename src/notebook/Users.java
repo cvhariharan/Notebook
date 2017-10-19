@@ -32,6 +32,7 @@ public class Users extends DatabaseHandler implements Serializable{
     
     public boolean authenticate()
     {
+        
         Scanner sc = new Scanner(System.in);
         try
         {
@@ -66,16 +67,8 @@ public class Users extends DatabaseHandler implements Serializable{
                 in = in.toLowerCase();
                 if(in.equals("y"))
                 {
-                    try
-                    {
-                    auth.executeUpdate("insert into all_users values('"+this.username+"' ,'"+this.password+"')");
+                    insertInto("users.db","all_users",this.input_username,this.input_password,"",0);
                     System.out.println("Successfully added new user.");
-                    
-                    }
-                    catch(SQLException e)
-                    {
-                        System.out.println(e.getMessage());
-                    }
                 }
                 else
                     System.out.println("Not quite my input!");
@@ -112,7 +105,7 @@ public class Users extends DatabaseHandler implements Serializable{
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
         catch(IOException p)
         {
@@ -145,15 +138,15 @@ public class Users extends DatabaseHandler implements Serializable{
             }
             catch(SQLException e)
             {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
             catch(IOException e)
             {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
             catch(ClassNotFoundException e)
             {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
             
         }
