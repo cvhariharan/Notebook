@@ -25,8 +25,9 @@ public class Notebook {
         Users user = new Users(username,password);
         if(user.logged_in)
         {
-            
-            user.addTodo("Just checking","Test2","$2a$10$XOxJalyO577lA7cfI18j7u25vgJAsSrWsthZvKgOF9Wv7nm41Bs1m",true);
+            user.addNote("#This is a #hash #tag", "Hashtag test");
+            user.addNote("#This is another test #file","hashtag test2");
+            //user.addTodo("Just checking","Test2","$2a$10$XOxJalyO577lA7cfI18j7u25vgJAsSrWsthZvKgOF9Wv7nm41Bs1m",true);
         }
     }
     

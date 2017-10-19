@@ -12,7 +12,7 @@ import java.sql.*;
 public class DatabaseHandler {
     
     private Connection conn;
-    public Connection getDatabase(String name, boolean userdb) throws ClassNotFoundException
+    public Connection getDatabase(String name, boolean notedb) throws ClassNotFoundException
     {
         String url = "jdbc:sqlite:data/" + name;
         try
@@ -22,28 +22,33 @@ public class DatabaseHandler {
             if(conn!=null)
             {
                 DatabaseMetaData meta = conn.getMetaData();
-                createTable(userdb); //If userdb is true it creates a user database
+                createTable(notedb); //If userdb is true it creates note related tables
             }
+            
         }
         catch(SQLException e)
         {
             System.out.println(e.getMessage());
         }
+        
         return conn;
     }
     
-    public void createTable(boolean userdb)
+    public void createTable(boolean notedb)
     {
         try
         {
             Statement stm = conn.createStatement();
-            if(!userdb)
+            if(!notedb)
                 stm.execute("create table if not exists all_users (username text, passw text)");
             else
             {
                 stm.execute("create table if not exists notes (hash_id text, title text, owner text)");
                 stm.execute("create table if not exists todo (hash_id text, title text)");
+                stm.execute("create table if not exists categories (hash_id text, category text)");
+                
             }
+            
         }
         catch(SQLException e)
         {
@@ -51,4 +56,26 @@ public class DatabaseHandler {
         }
     }
     
+    public static void executeUpdateDb(String sql, String db_name)
+    {
+        Connection db;
+        DatabaseHandler handler = new DatabaseHandler();
+        try
+        {
+            db = handler.getDatabase(db_name,true);
+            Statement stm = db.createStatement();
+            stm.executeUpdate(sql);
+            stm.close();
+            db.close();
+        }
+        catch(SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        catch(ClassNotFoundException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        
+    }
 }

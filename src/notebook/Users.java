@@ -35,7 +35,7 @@ public class Users extends DatabaseHandler implements Serializable{
         Scanner sc = new Scanner(System.in);
         try
         {
-        conn = getDatabase("users.db",false);
+            conn = getDatabase("users.db",false);
         }
         catch(ClassNotFoundException e)
         {
@@ -56,6 +56,8 @@ public class Users extends DatabaseHandler implements Serializable{
                 }
                 else
                     System.out.println("Username exists but password doesn't match. Create new user with a different username.");
+                username_exists.close();
+                
             }
             else
             {
@@ -66,9 +68,9 @@ public class Users extends DatabaseHandler implements Serializable{
                 {
                     try
                     {
-                    Statement add = conn.createStatement();
                     auth.executeUpdate("insert into all_users values('"+this.username+"' ,'"+this.password+"')");
                     System.out.println("Successfully added new user.");
+                    
                     }
                     catch(SQLException e)
                     {
@@ -106,6 +108,7 @@ public class Users extends DatabaseHandler implements Serializable{
             obj_file.close();
             Statement add_note = notesdb.createStatement();
             add_note.executeUpdate("insert into notes values (\""+hash+"\", \""+title+"\",\""+this.username+"\")");
+           
         }
         catch(SQLException e)
         {

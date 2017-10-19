@@ -13,7 +13,7 @@ import java.io.*;
  * @author thero
  */
 public class Note implements Serializable{
-    
+    private LinkedList<String> categories = new LinkedList<String>();
     private SimpleDateFormat date_format = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
     private Timestamp timestamp;
     public String date_time;
@@ -34,6 +34,7 @@ public class Note implements Serializable{
     {
         this.content = content;
         generateHash();
+        findCategory();
     }
     
     public void appendNote(String add)
@@ -47,12 +48,38 @@ public class Note implements Serializable{
     
     public String generateHash()
     {
-        String date_and_title = this.date_time + this.title;
+        String date_and_title = this.date_time + this.owner;
         String hash = BCrypt.hashpw(date_and_title,BCrypt.gensalt());
         hash = hash.replace("\\", "s");
         hash = hash.replace("/", "s");
         hash = hash.replace(".", "s");
         this.hash = hash;
         return hash;
+    }
+    
+    public void findCategory()
+    {
+        String temp = this.content;
+        int cat_index = 0;
+        while(temp.indexOf("#",cat_index)>=0)
+        {
+            int cat_start = temp.indexOf("#",cat_index);
+            int cat_end = 0;
+            if(temp.indexOf(" ",cat_start)<temp.length() && temp.indexOf(" ",cat_start) != -1)
+            {
+                cat_end = temp.indexOf(" ",cat_start);
+            }
+            else
+                cat_end = temp.length();
+            cat_index = cat_end+1;
+            String hashtag = temp.substring(cat_start, cat_end);
+            if(!categories.contains(hashtag))
+            {
+                categories.add(hashtag);
+                String sql = "insert into categories values (\""+this.hash+"\",\""+hashtag+"\")";
+                DatabaseHandler.executeUpdateDb(sql,"notes.db");
+            }
+            System.out.println(hashtag);
+        }
     }
 }
