@@ -12,6 +12,7 @@ import java.util.*;
  * @author thero
  */
 public class ToDo extends Note{
+    private LinkedList<String> categories = new LinkedList<String>();
     private ArrayList<Note> note_links = new ArrayList<Note>();
     private SimpleDateFormat date_format = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
     private Timestamp timestamp;
@@ -54,5 +55,15 @@ public class ToDo extends Note{
         hash = hash.replace(".", "s");
         this.hash = hash;
         return hash;
+    }
+    
+    public void addCategory(String cate)
+    {
+        if(!categories.contains(cate))
+        {
+            categories.add(cate);
+            String sql = "insert into categories values ('"+this.hash+"','"+cate+"', '"+this.owner+"', '"+1+"')";
+            DatabaseHandler.executeUpdateDb(sql,"notes.db");
+        }
     }
 }

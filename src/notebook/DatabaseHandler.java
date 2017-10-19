@@ -44,8 +44,8 @@ public class DatabaseHandler {
             else
             {
                 stm.execute("create table if not exists notes (hash_id text, title text, owner text)");
-                stm.execute("create table if not exists todo (hash_id text, title text)");
-                stm.execute("create table if not exists categories (hash_id text, category text, owner text)");
+                stm.execute("create table if not exists todo (hash_id text, title text, owner text)");
+                stm.execute("create table if not exists categories (hash_id text, category text, owner text,note integer)"); //0-Note, 1-Todo
                 
             }
             

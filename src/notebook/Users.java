@@ -120,25 +120,42 @@ public class Users extends DatabaseHandler implements Serializable{
         }
     }
     
-    public void addTodo(String content,String title,String file_hash,boolean existing)
+    public void addTodo(String content,String title,String file_hash,String category,boolean existing)
     {
         if(!existing)
         {
             try
             {
+                Connection notesdb = getDatabase("notes.db",true);
                 ToDo todo = new ToDo(this.username,title);
                 todo.createNote(content);
+                todo.addCategory(category);
                 String hash = todo.hash;
+                System.out.println("Created a Todo with hash: "+hash);
                 FileOutputStream obj_file = new FileOutputStream("data/"+hash);
                 ObjectOutputStream out = new ObjectOutputStream(obj_file);
+                Statement stm = notesdb.createStatement();
+                stm.executeUpdate("insert into todo values ('"+hash+"', '"+title+"','"+this.username+"')");
+                //todo.showTasks();
+                stm.close();
+                notesdb.close();
                 out.writeObject(todo);
                 out.close();
                 obj_file.close();
+            }
+            catch(SQLException e)
+            {
+                e.printStackTrace();
             }
             catch(IOException e)
             {
                 e.printStackTrace();
             }
+            catch(ClassNotFoundException e)
+            {
+                e.printStackTrace();
+            }
+            
         }
         else
         {
@@ -171,7 +188,7 @@ public class Users extends DatabaseHandler implements Serializable{
         String sql = "select * from notes where owner = '"+this.username+"'";
         if(!category.equals("*"))
         {
-            sql = "select * from categories where category = '"+category+"'"+" and owner = '"+this.username+"'";
+            sql = "select * from categories where category = '"+category+"'"+" and owner = '"+this.username+"' and note = '"+0+"'";
         }
         
         int i = 1;
@@ -188,6 +205,48 @@ public class Users extends DatabaseHandler implements Serializable{
                 System.out.println(i+"."+note.title.toUpperCase());
                 System.out.println(note.returnContent());
                 System.out.println("Hash: "+note.hash);
+                i++;
+            }
+            notesdb.close();
+            stm.close();
+            results.close();
+        }
+        catch(SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        catch(ClassNotFoundException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        catch(IOException e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    public void showTodos(String category)
+    {
+        String sql = "select * from todo where owner = '"+this.username+"'";
+        if(!category.equals("*"))
+        {
+            sql = "select * from categories where category = '"+category+"'"+" and owner = '"+this.username+"' and note = '"+1+"'";
+        }
+        
+        int i = 1;
+        try
+        {
+            Connection notesdb = getDatabase("notes.db",true);
+            Statement stm = notesdb.createStatement();
+            ResultSet results = stm.executeQuery(sql);
+            while(results.next())
+            {
+                FileInputStream obj_file = new FileInputStream("data/"+results.getString("hash_id"));
+                ObjectInputStream in = new ObjectInputStream(obj_file);
+                ToDo todo = (ToDo) in.readObject();
+                System.out.println(i+"."+todo.title.toUpperCase());
+                todo.showTasks();
+                System.out.println("Hash: "+todo.hash);
                 i++;
             }
             notesdb.close();

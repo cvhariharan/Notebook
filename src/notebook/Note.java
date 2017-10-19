@@ -57,7 +57,7 @@ public class Note implements Serializable{
         return hash;
     }
     
-    public void findCategory()
+    public final void findCategory()
     {
         String temp = this.content;
         int cat_index = 0;
@@ -76,7 +76,7 @@ public class Note implements Serializable{
             if(!categories.contains(hashtag))
             {
                 categories.add(hashtag);
-                String sql = "insert into categories values ('"+this.hash+"','"+hashtag+"', '"+this.owner+"')";
+                String sql = "insert into categories values ('"+this.hash+"','"+hashtag+"', '"+this.owner+"', '"+0+"')";
                 DatabaseHandler.executeUpdateDb(sql,"notes.db");
             }
         }
