@@ -23,6 +23,7 @@ public class ToDo extends Note{
         date_time = date_format.format(timestamp);
         this.owner = username;
         this.title = title;
+        generateHash();
     }
     @Override
     public void createNote(String content)
@@ -43,5 +44,15 @@ public class ToDo extends Note{
         {
             System.out.println(note.returnContent());
         }
+    }
+    private String generateHash()
+    {
+        String date_and_title = this.date_time + this.owner;
+        String hash = BCrypt.hashpw(date_and_title,BCrypt.gensalt());
+        hash = hash.replace("\\", "s");
+        hash = hash.replace("/", "s");
+        hash = hash.replace(".", "s");
+        this.hash = hash;
+        return hash;
     }
 }

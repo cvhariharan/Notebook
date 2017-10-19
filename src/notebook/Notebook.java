@@ -27,6 +27,10 @@ public class Notebook {
         {
             user.addNote("#This is a #hash #tag", "Hashtag test");
             user.addNote("#This is another test #file","hashtag test2");
+            user.addNote("Can it show larger notes easily. This is going to be testing that.#test #note", "Just another note");
+            user.addNote("#Java mini project has to be completed","Java mini project");
+            user.showNotes("*");
+            user.showNotes("#Java");
             //user.addTodo("Just checking","Test2","$2a$10$XOxJalyO577lA7cfI18j7u25vgJAsSrWsthZvKgOF9Wv7nm41Bs1m",true);
         }
     }

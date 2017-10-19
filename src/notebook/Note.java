@@ -27,13 +27,13 @@ public class Note implements Serializable{
         date_time = date_format.format(timestamp);
         this.owner = username;
         this.title = title;
-        
+        generateHash();
     }
     
     public void createNote(String content)
     {
         this.content = content;
-        generateHash();
+        
         findCategory();
     }
     
@@ -46,7 +46,7 @@ public class Note implements Serializable{
         return this.content;
     }
     
-    public String generateHash()
+    private String generateHash()
     {
         String date_and_title = this.date_time + this.owner;
         String hash = BCrypt.hashpw(date_and_title,BCrypt.gensalt());
@@ -76,10 +76,10 @@ public class Note implements Serializable{
             if(!categories.contains(hashtag))
             {
                 categories.add(hashtag);
-                String sql = "insert into categories values (\""+this.hash+"\",\""+hashtag+"\")";
+                String sql = "insert into categories values ('"+this.hash+"','"+hashtag+"', '"+this.owner+"')";
                 DatabaseHandler.executeUpdateDb(sql,"notes.db");
             }
-            System.out.println(hashtag);
         }
     }
+
 }

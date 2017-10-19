@@ -99,15 +99,15 @@ public class Users extends DatabaseHandler implements Serializable{
         note.title = title;
         try
         {
-            String hash = note.generateHash();
+            String hash = note.hash;
             FileOutputStream obj_file = new FileOutputStream("data/"+hash);
             ObjectOutputStream out = new ObjectOutputStream(obj_file);
             out.writeObject(note);
             out.close();
-            System.out.println("New file created.");
+            System.out.println("Note created.");
             obj_file.close();
             Statement add_note = notesdb.createStatement();
-            add_note.executeUpdate("insert into notes values (\""+hash+"\", \""+title+"\",\""+this.username+"\")");
+            add_note.executeUpdate("insert into notes values ('"+hash+"', '"+title+"','"+this.username+"')");
            
         }
         catch(SQLException e)
@@ -128,7 +128,7 @@ public class Users extends DatabaseHandler implements Serializable{
             {
                 ToDo todo = new ToDo(this.username,title);
                 todo.createNote(content);
-                String hash = todo.generateHash();
+                String hash = todo.hash;
                 FileOutputStream obj_file = new FileOutputStream("data/"+hash);
                 ObjectOutputStream out = new ObjectOutputStream(obj_file);
                 out.writeObject(todo);
@@ -164,6 +164,47 @@ public class Users extends DatabaseHandler implements Serializable{
                 System.out.println(e.getMessage());
             }
             
+        }
+    }
+    public void showNotes(String category)
+    {
+        String sql = "select * from notes where owner = '"+this.username+"'";
+        if(!category.equals("*"))
+        {
+            sql = "select * from categories where category = '"+category+"'"+" and owner = '"+this.username+"'";
+        }
+        
+        int i = 1;
+        try
+        {
+            Connection notesdb = getDatabase("notes.db",true);
+            Statement stm = notesdb.createStatement();
+            ResultSet results = stm.executeQuery(sql);
+            while(results.next())
+            {
+                FileInputStream obj_file = new FileInputStream("data/"+results.getString("hash_id"));
+                ObjectInputStream in = new ObjectInputStream(obj_file);
+                Note note = (Note) in.readObject();
+                System.out.println(i+"."+note.title.toUpperCase());
+                System.out.println(note.returnContent());
+                System.out.println("Hash: "+note.hash);
+                i++;
+            }
+            notesdb.close();
+            stm.close();
+            results.close();
+        }
+        catch(SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        catch(ClassNotFoundException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        catch(IOException e)
+        {
+            System.out.println(e.getMessage());
         }
     }
 }
