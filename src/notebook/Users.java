@@ -16,6 +16,7 @@ public class Users extends DatabaseHandler implements Serializable{
     private String input_password;
     private String username;
     private String password;
+    private String plain_password;
     private Connection conn;
     private Connection notesdb;
     public boolean logged_in = false;
@@ -25,8 +26,6 @@ public class Users extends DatabaseHandler implements Serializable{
     {
         this.input_username = username;
         this.input_password = password;
-        this.username = username;
-        this.password = password;
         authenticate();
     }
     
@@ -45,15 +44,18 @@ public class Users extends DatabaseHandler implements Serializable{
         try
         {
             Statement auth = conn.createStatement();
-            ResultSet username_exists = selectFrom("users.db","all_users","username = '"+this.username+"'","","");//auth.executeQuery("SELECT * FROM all_users WHERE username = \""+this.username+ "\"");
+            ResultSet username_exists = selectFrom("users.db","all_users","username = '"+this.input_username+"'","","");//auth.executeQuery("SELECT * FROM all_users WHERE username = \""+this.username+ "\"");
             if(username_exists.next())
             {
+                
                 //ResultSet user_password = selectFrom("users.db","all_users","username = '"+this.username+"'","","");//auth.executeQuery("SELECT * FROM all_users WHERE username = \""+this.username+ "\"");
-                if((this.password).equals(username_exists.getString("passw")))
+                if(BCrypt.checkpw(this.input_password,username_exists.getString("passw")))
                 {
                     System.out.println("Successfully logged in!");
                     notesdb = getDatabase("notes.db",true);
                     logged_in = true;
+                    this.username = this.input_username;
+                    this.password = this.input_password;
                 }
                 else
                     System.out.println("Username exists but password doesn't match. Create new user with a different username.");
@@ -67,7 +69,7 @@ public class Users extends DatabaseHandler implements Serializable{
                 in = in.toLowerCase();
                 if(in.equals("y"))
                 {
-                    insertInto("users.db","all_users",this.input_username,this.input_password,"",0);
+                    insertInto("users.db","all_users",this.input_username,BCrypt.hashpw(this.input_password, BCrypt.gensalt()),"",0);
                     System.out.println("Successfully added new user.");
                 }
                 else

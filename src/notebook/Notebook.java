@@ -22,7 +22,6 @@ public class Notebook {
         String username = in.next();
         System.out.println("Password: ");
         String password = in.next();
-        password = BCrypt.hashpw(password,BCrypt.gensalt());
         Users user = new Users(username,password);
         if(user.logged_in)
         {
