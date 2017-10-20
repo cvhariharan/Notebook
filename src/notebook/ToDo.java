@@ -38,8 +38,8 @@ public class ToDo extends Note{
     {
         note_links.remove(index);
     }
-    
-    public void showTasks()
+    @Override 
+    public String returnContent()
     {
         int i = 1;
         for(Note note: note_links)
@@ -47,6 +47,7 @@ public class ToDo extends Note{
             System.out.println(i+"."+note.returnContent());
             i++;
         }
+        return "";
     }
     private String generateHash()
     {

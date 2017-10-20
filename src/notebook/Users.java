@@ -125,7 +125,7 @@ public class Users extends DatabaseHandler implements Serializable{
                 System.out.println("Created a Todo with hash: "+hash);
                 FileOutputStream obj_file = new FileOutputStream("data/"+hash);
                 ObjectOutputStream out = new ObjectOutputStream(obj_file);
-                insertInto("notes.db","notes",hash,title,this.username,0);
+                insertInto("notes.db","todo",hash,title,this.username,0);
                 out.writeObject(todo);
                 out.close();
                 obj_file.close();
@@ -149,7 +149,14 @@ public class Users extends DatabaseHandler implements Serializable{
                 ObjectInputStream in = new ObjectInputStream(obj_file);
                 ToDo todo = (ToDo) in.readObject();
                 todo.createNote(content);
-                todo.showTasks();
+                todo.returnContent();
+                in.close();
+                obj_file.close();
+                FileOutputStream obj_out = new FileOutputStream("data/"+file_hash);
+                ObjectOutputStream out = new ObjectOutputStream(obj_out);
+                out.writeObject(todo);
+                out.close();
+                obj_out.close();
             }
             catch(FileNotFoundException e)
             {
@@ -167,6 +174,7 @@ public class Users extends DatabaseHandler implements Serializable{
             
         }
     }
+    /*
     public void showNotes(String category)
     {
         String sql = "select * from notes where owner = '"+this.username+"'";
@@ -229,8 +237,55 @@ public class Users extends DatabaseHandler implements Serializable{
                 ObjectInputStream in = new ObjectInputStream(obj_file);
                 ToDo todo = (ToDo) in.readObject();
                 System.out.println(i+"."+todo.title.toUpperCase());
-                todo.showTasks();
+                todo.returnContent();
                 System.out.println("Hash: "+todo.hash);
+                i++;
+            }
+            notesdb.close();
+            stm.close();
+            results.close();
+        }
+        catch(SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        catch(ClassNotFoundException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        catch(IOException e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
+    */
+    public void showAll(String category,int type) //0-Note,1-Todo
+    {
+        String table_name = (type==1)?"todo":"notes"; 
+        String sql = "select * from "+table_name+" where owner = '"+this.username+"'";
+        if(!category.equals("*"))
+        {
+            sql = "select * from categories where category = '"+category+"'"+" and owner = '"+this.username+"' and note = '"+type+"'";
+        }
+        
+        int i = 1;
+        try
+        {
+            Connection notesdb = getDatabase("notes.db",true);
+            Statement stm = notesdb.createStatement();
+            ResultSet results = stm.executeQuery(sql);
+            Note note = null;
+            while(results.next())
+            {
+                FileInputStream obj_file = new FileInputStream("data/"+results.getString("hash_id"));
+                ObjectInputStream in = new ObjectInputStream(obj_file);
+                if(type == 0)
+                    note = (Note) in.readObject();
+                else if(type == 1)
+                    note = (ToDo) in.readObject();
+                System.out.println(i+"."+note.title.toUpperCase());
+                System.out.println(note.returnContent());
+                System.out.println("Hash: "+note.hash);
                 i++;
             }
             notesdb.close();

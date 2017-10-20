@@ -25,8 +25,15 @@ public class Notebook {
         Users user = new Users(username,password);
         if(user.logged_in)
         {
-            user.addTodo("Test todo","Test","","Test",false);
-            
+            //user.addTodo("Test todo","Test","","Test",false);
+            //user.addTodo("Second test","","$2a$10$OPMBp7VnkkqDU9RshqXHXuvA7JLsHBXY1EVgvf92mvBHDhhyo7v9C","",true);
+           /* user.addNote("Test #note", "test2");
+            user.addNote("Testas asfasf #note", "test3");
+            user.addNote("Test sfasfasf #note", "test4");
+            user.addNote("Test2 #as", "lol1");
+            user.addNote("Test3 #as", "lol2");
+            user.showAll("#note", 0);*/
+            user.showAll("*",1);
             //user.addTodo("Just checking","Test2","$2a$10$XOxJalyO577lA7cfI18j7u25vgJAsSrWsthZvKgOF9Wv7nm41Bs1m",true);
         }
     }
