@@ -45,11 +45,11 @@ public class Users extends DatabaseHandler implements Serializable{
         try
         {
             Statement auth = conn.createStatement();
-            ResultSet username_exists = auth.executeQuery("SELECT * FROM all_users WHERE username = \""+this.username+ "\"");
+            ResultSet username_exists = selectFrom("users.db","all_users","username = '"+this.username+"'","","");//auth.executeQuery("SELECT * FROM all_users WHERE username = \""+this.username+ "\"");
             if(username_exists.next())
             {
-                ResultSet user_password = auth.executeQuery("SELECT * FROM all_users WHERE username = \""+this.username+ "\"");
-                if((this.password).equals(user_password.getString("passw")))
+                //ResultSet user_password = selectFrom("users.db","all_users","username = '"+this.username+"'","","");//auth.executeQuery("SELECT * FROM all_users WHERE username = \""+this.username+ "\"");
+                if((this.password).equals(username_exists.getString("passw")))
                 {
                     System.out.println("Successfully logged in!");
                     notesdb = getDatabase("notes.db",true);
@@ -99,14 +99,10 @@ public class Users extends DatabaseHandler implements Serializable{
             out.close();
             System.out.println("Note created.");
             obj_file.close();
-            Statement add_note = notesdb.createStatement();
-            add_note.executeUpdate("insert into notes values ('"+hash+"', '"+title+"','"+this.username+"')");
+            insertInto("notes.db","notes",hash,title,this.username,0);
            
         }
-        catch(SQLException e)
-        {
-            System.out.println(e.getMessage());
-        }
+        
         catch(IOException p)
         {
             p.printStackTrace();
@@ -127,19 +123,12 @@ public class Users extends DatabaseHandler implements Serializable{
                 System.out.println("Created a Todo with hash: "+hash);
                 FileOutputStream obj_file = new FileOutputStream("data/"+hash);
                 ObjectOutputStream out = new ObjectOutputStream(obj_file);
-                Statement stm = notesdb.createStatement();
-                stm.executeUpdate("insert into todo values ('"+hash+"', '"+title+"','"+this.username+"')");
-                //todo.showTasks();
-                stm.close();
-                notesdb.close();
+                insertInto("notes.db","notes",hash,title,this.username,0);
                 out.writeObject(todo);
                 out.close();
                 obj_file.close();
             }
-            catch(SQLException e)
-            {
-                System.out.println(e.getMessage());
-            }
+            
             catch(IOException e)
             {
                 System.out.println(e.getMessage());

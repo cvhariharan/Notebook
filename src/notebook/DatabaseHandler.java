@@ -136,4 +136,32 @@ public class DatabaseHandler {
         return true;
     }
     
+    public ResultSet selectFrom(String db_name, String table_name, String param1, String param2, String param3)
+    {
+        String sql;
+        ResultSet results = null;
+        boolean notes = db_name.equals("notes.db")?true:false;
+        try
+        {
+            Connection conn = getDatabase(db_name,notes);
+            if(notes)
+            {
+                sql = "select * from "+table_name+" where "+param1+" "+param2+" "+param3;
+            }
+            else
+                sql = "select * from "+table_name+" where "+param1+" "+param2;
+            Statement stm = conn.createStatement();
+            results = stm.executeQuery(sql);
+            
+        }
+        catch(ClassNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return results;
+    }
 }

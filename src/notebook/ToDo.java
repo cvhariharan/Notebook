@@ -41,9 +41,11 @@ public class ToDo extends Note{
     
     public void showTasks()
     {
+        int i = 1;
         for(Note note: note_links)
         {
-            System.out.println(note.returnContent());
+            System.out.println(i+"."+note.returnContent());
+            i++;
         }
     }
     private String generateHash()
@@ -59,11 +61,13 @@ public class ToDo extends Note{
     
     public void addCategory(String cate)
     {
+        DatabaseHandler handler = new DatabaseHandler();
         if(!categories.contains(cate))
         {
             categories.add(cate);
-            String sql = "insert into categories values ('"+this.hash+"','"+cate+"', '"+this.owner+"', '"+1+"')";
-            DatabaseHandler.executeUpdateDb(sql,"notes.db");
+            handler.insertInto("notes.db","categories",this.hash,cate,this.owner,1);
+            /*String sql = "insert into categories values ('"+this.hash+"','"+cate+"', '"+this.owner+"', '"+1+"')";
+            DatabaseHandler.executeUpdateDb(sql,"notes.db");*/
         }
     }
 }
