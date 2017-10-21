@@ -107,7 +107,7 @@ public class DatabaseHandler {
     public boolean insertInto(String db_name,String table_name,String param1, String param2, String param3,int param4)
     {
         String sql;
-        boolean notes = db_name.equals("notes.db")?true:false;
+        boolean notes = db_name.equals("notes.db");
         try
         {
             Connection conn = getDatabase(db_name,notes);
@@ -140,7 +140,7 @@ public class DatabaseHandler {
     {
         String sql;
         ResultSet results = null;
-        boolean notes = db_name.equals("notes.db")?true:false;
+        boolean notes = db_name.equals("notes.db");
         try
         {
             Connection conn = getDatabase(db_name,notes);
@@ -163,5 +163,27 @@ public class DatabaseHandler {
             e.printStackTrace();
         }
         return results;
+    }
+    
+    public void deleteFrom(String db_name, String table_name, String hash)
+    {
+        String sql = "delete from "+table_name+" where hash_id = '"+hash+"'";
+        boolean notes = db_name.equals("notes.db");
+        try
+        {
+            Connection conn = getDatabase(db_name,notes);
+            Statement stm = conn.createStatement();
+            stm.executeUpdate(sql);
+            stm.close();
+            conn.close();
+        }
+        catch(ClassNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
     }
 }

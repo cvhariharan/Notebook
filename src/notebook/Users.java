@@ -174,6 +174,26 @@ public class Users extends DatabaseHandler implements Serializable{
             
         }
     }
+    
+    public void delete(String hash)
+    {
+        ResultSet results = selectFrom("notes.db","categories","hash_id = '"+hash+"'"," and owner = '"+this.username+"'","");
+        try
+        {
+        String temp = results.getString("note");
+        results.close();
+        int note = Integer.parseInt(temp);
+        String table_name = (note==0)?"notes":"todo";
+        deleteFrom("notes.db",table_name,hash);
+        File file = new File("data/"+hash);
+        file.delete();
+        deleteFrom("notes.db","categories",hash);
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+    }
     /*
     public void showNotes(String category)
     {
