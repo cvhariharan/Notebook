@@ -177,20 +177,57 @@ public class Users extends DatabaseHandler implements Serializable{
     
     public void delete(String hash)
     {
-        ResultSet results = selectFrom("notes.db","categories","hash_id = '"+hash+"'"," and owner = '"+this.username+"'","");
-        try
-        {
-        String temp = results.getString("note");
-        
-        int note = Integer.parseInt(temp);
-        String table_name = (note==0)?"notes":"todo";
+        String table_name = noteOrTodo(hash);
         deleteFrom("notes.db",table_name,hash);
         File file = new File("data/"+hash);
         file.delete();
         deleteFrom("notes.db","categories",hash);
-        results.close();
+    }
+    
+    public String noteOrTodo(String hash)
+    {
+        //Returns the table name based on the hash type ie: note or todo
+        String table_name = null;
+        ResultSet result = selectFrom("notes.db","categories","hash_id = '"+hash+"'"," and owner = '"+this.username+"'","");
+        try
+        {
+            String temp = result.getString("note");
+            int note = Integer.parseInt(temp);
+            table_name = (note==0)?"notes":"todo";
+            result.close();
         }
         catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return table_name;
+    }
+    
+    public void show(String hash)
+    {
+        String type = noteOrTodo(hash);
+        Note note = null;
+        try
+        {
+        FileInputStream obj_file = new FileInputStream("data/"+hash);
+        ObjectInputStream in = new ObjectInputStream(obj_file);
+        if(type.equals("notes"))
+            note = (Note) in.readObject();
+        else
+            note = (ToDo) in.readObject();
+        System.out.println(note.title.toUpperCase());
+        System.out.println(note.returnContent());
+        System.out.println("Hash: "+note.hash);
+        }
+        catch(ClassNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        catch(FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        catch(IOException e)
         {
             e.printStackTrace();
         }

@@ -57,7 +57,7 @@ public class Notebook {
             do
             {
                 System.out.println("1.Create Note\n2.Create Todo\n3.Add task to todo list\n4.Delete note/todo\n5.Delete task from todo\n6.Show todo"
-                +"\n7.Show note\n8.Show all\n9.Search category");
+                +"\n7.Show note\n8.Show all\n9.Search category\n10.Show\n(Enter -1 to exit)");
                 input = in.nextInt();
                 switch(input)
                 {
@@ -97,9 +97,11 @@ public class Notebook {
                         break;
                         
                     case 6:
+                        user.showAll("*", 1);
                         break;
                      
                     case 7:
+                        user.showAll("*", 0);
                         break;
                     
                     case 8:
@@ -114,12 +116,19 @@ public class Notebook {
                         user.showAll(cate, 1);
                         break;
                         
-                    case 10:
+                    case -1:
                         break;
+                        
+                    case 10:
+                        System.out.println("Hash: ");
+                        hash = in.next();
+                        user.show(hash);
+                        break;
+                        
                     default: 
                         System.out.println("Invalid Input!");
                 }
-            }while(input != 10);
+            }while(input != -1);
         }
     }
     
