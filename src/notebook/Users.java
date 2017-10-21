@@ -181,13 +181,14 @@ public class Users extends DatabaseHandler implements Serializable{
         try
         {
         String temp = results.getString("note");
-        results.close();
+        
         int note = Integer.parseInt(temp);
         String table_name = (note==0)?"notes":"todo";
         deleteFrom("notes.db",table_name,hash);
         File file = new File("data/"+hash);
         file.delete();
         deleteFrom("notes.db","categories",hash);
+        results.close();
         }
         catch(SQLException e)
         {
@@ -294,6 +295,7 @@ public class Users extends DatabaseHandler implements Serializable{
             Connection notesdb = getDatabase("notes.db",true);
             Statement stm = notesdb.createStatement();
             ResultSet results = stm.executeQuery(sql);
+            
             Note note = null;
             while(results.next())
             {
