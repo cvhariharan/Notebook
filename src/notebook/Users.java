@@ -314,14 +314,19 @@ public class Users extends DatabaseHandler implements Serializable{
         }
     }
     
-    public String getHash(String title,int type)//0-Note 1-Todo
+    public void getHash(String title,int type)//0-Note 1-Todo
     {
         String table_name = (type==0)?"notes":"todo";
         String hash = "";
         ResultSet r = selectFrom("notes.db",table_name," title like '%"+title+"%'"," and owner = '"+this.username+"'","");
         try
         {
-           hash = r.getString("hash_id");
+           while(r.next())
+           {
+               hash = r.getString("hash_id");
+               show(hash);
+           }
+           
            //r.close();
         }
         catch(SQLException e)
@@ -329,6 +334,5 @@ public class Users extends DatabaseHandler implements Serializable{
             System.out.println("No results...");
             System.out.println(e.getMessage());
         }
-        return hash;
     }
 }
