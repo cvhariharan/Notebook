@@ -92,23 +92,12 @@ public class Users extends DatabaseHandler implements Serializable{
         Note note = new Note(this.username,title);
         note.createNote(content);
         note.title = title;
-        try
-        {
-            String hash = note.hash;
-            FileOutputStream obj_file = new FileOutputStream("data/"+hash);
-            ObjectOutputStream out = new ObjectOutputStream(obj_file);
-            out.writeObject(note);
-            out.close();
-            System.out.println("Note created.");
-            obj_file.close();
-            insertInto("notes.db","notes",hash,title,this.username,0);
+        String hash = note.hash;
+        writeToFile(note);
+        System.out.println("Note created.");
+        insertInto("notes.db","notes",hash,title,this.username,0);
            
-        }
         
-        catch(IOException p)
-        {
-            p.printStackTrace();
-        }
     }
     
     public void addTodo(String content,String title,String file_hash,String category,boolean existing)
@@ -123,17 +112,8 @@ public class Users extends DatabaseHandler implements Serializable{
                 todo.addCategory(category);
                 String hash = todo.hash;
                 System.out.println("Created a Todo with hash: "+hash);
-                FileOutputStream obj_file = new FileOutputStream("data/"+hash);
-                ObjectOutputStream out = new ObjectOutputStream(obj_file);
                 insertInto("notes.db","todo",hash,title,this.username,0);
-                out.writeObject(todo);
-                out.close();
-                obj_file.close();
-            }
-            
-            catch(IOException e)
-            {
-                System.out.println(e.getMessage());
+                writeToFile(todo);
             }
             catch(ClassNotFoundException e)
             {
@@ -143,26 +123,10 @@ public class Users extends DatabaseHandler implements Serializable{
         }
         else
         {
-            try
-            {
                 ToDo todo = (ToDo) readFromFile(file_hash,1);
                 todo.createNote(content);
                 todo.returnContent();
-                FileOutputStream obj_out = new FileOutputStream("data/"+file_hash);
-                ObjectOutputStream out = new ObjectOutputStream(obj_out);
-                out.writeObject(todo);
-                out.close();
-                obj_out.close();
-            }
-            catch(FileNotFoundException e)
-            {
-                System.out.println("You sure the ToDo list exists?");
-                System.out.println(e.getMessage());
-            }
-            catch(IOException e)
-            {
-                System.out.println(e.getMessage());
-            }
+                writeToFile(todo);
             
         }
     }
@@ -221,23 +185,15 @@ public class Users extends DatabaseHandler implements Serializable{
         {
             try
             {
-                obj_file = new FileInputStream("data/"+hash);
-                in = new ObjectInputStream(obj_file);
                 ToDo todo = (ToDo) readFromFile(hash,1);
                 todo.returnContent();
                 System.out.println("Index: ");
                 Scanner sc = new Scanner(System.in);
                 int index = sc.nextInt();
                 todo.deleteNote(index-1);
-                in.close();
-                obj_file.close();
                 ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("data/"+hash));
                 out.writeObject(todo);
                 out.close();
-            }
-            catch(ClassNotFoundException e)
-            {
-                e.printStackTrace();
             }
             catch(FileNotFoundException e)
             {
@@ -269,12 +225,6 @@ public class Users extends DatabaseHandler implements Serializable{
             Note note = null;
             while(results.next())
             {
-                /*FileInputStream obj_file = new FileInputStream("data/"+results.getString("hash_id"));
-                ObjectInputStream in = new ObjectInputStream(obj_file);
-                if(type == 0)
-                    note = (Note) in.readObject();
-                else if(type == 1)
-                    note = (ToDo) in.readObject();*/
                 note = readFromFile(results.getString("hash_id"),type);
                 System.out.println(i+"."+note.title.toUpperCase());
                 System.out.println(note.returnContent());
@@ -324,8 +274,24 @@ public class Users extends DatabaseHandler implements Serializable{
         }
         return note;
     }
-    public void writeToFile(String hash)
+    public void writeToFile(Note note)
     {
-        
+        String hash = note.hash;
+        try
+        {
+        FileOutputStream obj_file = new FileOutputStream("data/"+hash);
+        ObjectOutputStream out = new ObjectOutputStream(obj_file);
+        out.writeObject(note);
+        out.close();
+        obj_file.close();
+        }
+        catch(FileNotFoundException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 }
