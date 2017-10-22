@@ -33,8 +33,8 @@ public class Notebook {
         {
             do
             {
-                String output = "1.Create Note\n2.Create Todo\n3.Add task to todo list\n4.Delete note/todo\n5.Delete task from todo\n6.Show  all todo lists"
-                +"\n7.Show all notes\n8.Show all\n9.Search category\n10.Show\n11.Edit Note\n(Enter -1 to exit)";
+                String output = "1.Create Note\n2.Create Todo\n3.Add task to todo list\n4.Delete note/todo\n5.Delete task from todo\n6.Show all todo lists"
+                +"\n7.Show all notes\n8.Show all\n9.Search category\n10.Search\n11.Edit Note\n(Enter -1 to exit)";
                 System.out.println(output.toUpperCase());
                 input = in.nextInt();
                 switch(input)
@@ -127,7 +127,7 @@ public class Notebook {
                         {
                             System.out.println("Title: ");
                             String search = reader.readLine();
-                            System.out.println("Search\n1.Notes\n2.Todo lists");
+                            System.out.println("1.Notes\n2.Todo lists");
                             int type = in.nextInt()-1;
                             user.getHash(search,type);
                         }
