@@ -44,7 +44,7 @@ public class ToDo extends Note{
         int i = 1;
         for(Note note: note_links)
         {
-            System.out.println(i+"."+note.returnContent());
+            System.out.print(i+"."+note.returnContent());
             i++;
         }
         return "";

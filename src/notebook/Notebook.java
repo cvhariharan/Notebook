@@ -18,17 +18,6 @@ public class Notebook {
     static Note note;
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
-        /*Options option = new Options();
-        option.addOption("N",true,"Create a new note with the given title.");
-        option.addOption("T",true,"Create a new Todo list with the given title.");
-        option.addOption("A",true,"Append a new task to the todo list with given hash.");
-        option.addOption("D",true,"Delete note/todo with given hash.");//Not implemented
-        option.addOption("Dt",true,"Delete a task from a todo list.");
-        option.addOption("ST",true,"Show todo list with given hash");
-        option.addOption("SN",true,"Show note with given hash");
-        option.addOption("SA",false,"Show all notes and todo lists.");
-        option.addOption("S",true,"Show all notes and todo lists in the given category.");
-        BasicParser parser = new BasicParser();*/
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         Scanner in = new Scanner(System.in);
         System.out.println("Username: ");
@@ -42,22 +31,11 @@ public class Notebook {
         String hash;
         if(user.logged_in)
         {
-            //user.addTodo("Test todo","Test","","Test",false);
-            //user.addTodo("Second test","","$2a$10$OPMBp7VnkkqDU9RshqXHXuvA7JLsHBXY1EVgvf92mvBHDhhyo7v9C","",true);
-            /*user.addNote("Test #note", "test2");
-            user.addNote("Testas asfasf #note", "test3");
-            user.addNote("Test sfasfasf #note", "test4");
-            user.addNote("Test2 #as", "lol1");
-            user.addNote("Test3 #as", "lol2");*/
-            //user.delete("$2a$10$ox8VRsYww6S5h7t2nCQK9O2ZbVJ4rca4jnF6HpPof6eZjMV0uh0xy");
-            //user.showAll("#note", 0);
-            //user.delete("$2a$10$OPMBp7VnkkqDU9RshqXHXuvA7JLsHBXY1EVgvf92mvBHDhhyo7v9C");
-            //user.showAll("*",1); //0-Note,1-Todo
-            //user.addTodo("Just checking","Test2","$2a$10$XOxJalyO577lA7cfI18j7u25vgJAsSrWsthZvKgOF9Wv7nm41Bs1m",true);
             do
             {
-                System.out.println("1.Create Note\n2.Create Todo\n3.Add task to todo list\n4.Delete note/todo\n5.Delete task from todo\n6.Show todo"
-                +"\n7.Show note\n8.Show all\n9.Search category\n10.Show\n(Enter -1 to exit)");
+                String output = "1.Create Note\n2.Create Todo\n3.Add task to todo list\n4.Delete note/todo\n5.Delete task from todo\n6.Show  all todo lists"
+                +"\n7.Show all notes\n8.Show all\n9.Search category\n10.Show\n11.Edit Note(Enter -1 to exit)";
+                System.out.println(output.toUpperCase());
                 input = in.nextInt();
                 switch(input)
                 {
@@ -137,11 +115,31 @@ public class Notebook {
                         break;
                         
                     case 10:
+                        System.out.println("1.Hash\n2.Title");
+                        int choice = in.nextInt();
+                        if(choice == 1)
+                        {
+                            System.out.println("Hash: ");
+                            hash = in.next();
+                            user.show(hash);
+                        }
+                        else if(choice == 2)
+                        {
+                            System.out.println("Title: ");
+                            String search = reader.readLine();
+                            System.out.println("Search\n1.Notes\n2.Todo lists");
+                            int type = in.nextInt()-1;
+                            hash = user.getHash(search,type);
+                            user.show(hash);
+                        }
+                        break;
+                    
+                    case 11:
                         System.out.println("Hash: ");
                         hash = in.next();
-                        user.show(hash);
+                        user.editNote(hash);
                         break;
-                        
+                            
                     default: 
                         System.out.println("Invalid Input!");
                 }

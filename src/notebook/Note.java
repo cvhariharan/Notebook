@@ -43,7 +43,7 @@ public class Note implements Serializable{
     }
     public String returnContent()
     {
-        return this.content;
+        return this.content+"\n";
     }
     
     private String generateHash()

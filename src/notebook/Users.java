@@ -175,9 +175,12 @@ public class Users extends DatabaseHandler implements Serializable{
         else
             note = (ToDo) in.readObject();*/
         note = readFromFile(hash,type_no);
+        System.out.println("-------------------------------------------------");
         System.out.println(note.title.toUpperCase());
-        System.out.println(note.returnContent());
+        System.out.println("-------------------------------------------------");
+        System.out.print(note.returnContent());
         System.out.println("Hash: "+note.hash);
+        System.out.println("-------------------------------------------------");
     }
     public void deleteTask(String hash)
     {
@@ -186,26 +189,14 @@ public class Users extends DatabaseHandler implements Serializable{
         ObjectInputStream in;
         if(type.equals("todo"))
         {
-            try
-            {
                 ToDo todo = (ToDo) readFromFile(hash,1);
                 todo.returnContent();
                 System.out.println("Index: ");
                 Scanner sc = new Scanner(System.in);
                 int index = sc.nextInt();
                 todo.deleteNote(index-1);
-                ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("data/"+hash));
-                out.writeObject(todo);
-                out.close();
-            }
-            catch(FileNotFoundException e)
-            {
-                e.printStackTrace();
-            }
-            catch(IOException e)
-            {
-                e.printStackTrace();
-            }
+                writeToFile(todo);
+            
         }
     }
    
@@ -229,9 +220,12 @@ public class Users extends DatabaseHandler implements Serializable{
             while(results.next())
             {
                 note = readFromFile(results.getString("hash_id"),type);
+                System.out.println("-------------------------------------------------");
                 System.out.println(i+"."+note.title.toUpperCase());
-                System.out.println(note.returnContent());
+                System.out.println("-------------------------------------------------");
+                System.out.print(note.returnContent());
                 System.out.println("Hash: "+note.hash);
+                System.out.println("-------------------------------------------------");
                 i++;
             }
             notesdb.close();
@@ -296,5 +290,45 @@ public class Users extends DatabaseHandler implements Serializable{
         {
             e.printStackTrace();
         }
+    }
+    
+    public void editNote(String hash)
+    {
+        String type = noteOrTodo(hash);
+        Scanner sc = new Scanner(System.in);
+        String content = "";
+        if(type.equals("notes"))
+        {
+            Note note = readFromFile(hash,0);
+            System.out.println("Content: ");
+            content = sc.next()+sc.nextLine();
+            System.out.println("1.APPEND\n2.OVERWRITE");
+            int choice = sc.nextInt();
+            if(choice == 1)
+                note.appendNote(content);
+            else if(choice == 2)
+                note.createNote(content);
+            else
+                System.out.println("Invalid Input!");
+            writeToFile(note);
+        }
+    }
+    
+    public String getHash(String title,int type)//0-Note 1-Todo
+    {
+        String table_name = (type==0)?"notes":"todo";
+        String hash = "";
+        ResultSet r = selectFrom("notes.db",table_name," title like '%"+title+"%'"," and owner = '"+this.username+"'","");
+        try
+        {
+           hash = r.getString("hash_id");
+           //r.close();
+        }
+        catch(SQLException e)
+        {
+            System.out.println("No results...");
+            System.out.println(e.getMessage());
+        }
+        return hash;
     }
 }
