@@ -1,13 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package notebook;
 import java.sql.*;
 /**
  *
- * @author thero
+ * @author C.V.Hariharan
  */
 public class DatabaseHandler {
     
@@ -55,55 +50,6 @@ public class DatabaseHandler {
             System.out.println(e.getMessage());
         }
     }
-    
-    public static void executeUpdateDb(String sql, String db_name)
-    {
-        Connection db;
-        DatabaseHandler handler = new DatabaseHandler();
-        try
-        {
-            db = handler.getDatabase(db_name,true);
-            Statement stm = db.createStatement();
-            stm.executeUpdate(sql);
-            stm.close();
-            db.close();
-        }
-        catch(SQLException e)
-        {
-            System.out.println(e.getMessage());
-        }
-        catch(ClassNotFoundException e)
-        {
-            System.out.println(e.getMessage());
-        }
-        
-    }
-    
-    /*public static ResultSet executeQueryDb(String sql, String db_name)
-    {
-        Connection db;
-        ResultSet results = null;
-        DatabaseHandler handler = new DatabaseHandler();
-        try
-        {
-            db = handler.getDatabase(db_name,true);
-            Statement stm = db.createStatement();
-            results = stm.executeQuery(sql);
-            stm.close();
-            db.close();
-            
-        }
-        catch(SQLException e)
-        {
-            System.out.println(e.getMessage());
-        }
-        catch(ClassNotFoundException e)
-        {
-            System.out.println(e.getMessage());
-        }
-        return results;
-    }*/
-    
     public boolean insertInto(String db_name,String table_name,String param1, String param2, String param3,int param4)
     {
         String sql;

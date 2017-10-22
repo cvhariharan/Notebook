@@ -1,15 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package notebook;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
 /**
  *
- * @author thero
+ * @author C.V.Hariharan
  */
 public class ToDo extends Note{
     private LinkedList<String> categories = new LinkedList<String>();
@@ -67,8 +62,6 @@ public class ToDo extends Note{
         {
             categories.add(cate);
             handler.insertInto("notes.db","categories",this.hash,cate,this.owner,1);
-            /*String sql = "insert into categories values ('"+this.hash+"','"+cate+"', '"+this.owner+"', '"+1+"')";
-            DatabaseHandler.executeUpdateDb(sql,"notes.db");*/
         }
     }
 }

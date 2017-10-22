@@ -1,15 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package notebook;
 import java.sql.*;
 import java.util.Scanner;
 import java.io.*;
 /**
  *
- * @author thero
+ * @author C.V.Hariharan
  */
 public class Users extends DatabaseHandler implements Serializable{
     private String input_username;
@@ -21,7 +16,7 @@ public class Users extends DatabaseHandler implements Serializable{
     private Connection notesdb;
     public boolean logged_in = false;
     public int id;
-    
+    public boolean new_user = false;
     Users(String username, String password)
     {
         this.input_username = username;
@@ -47,8 +42,6 @@ public class Users extends DatabaseHandler implements Serializable{
             ResultSet username_exists = selectFrom("users.db","all_users","username = '"+this.input_username+"'","","");//auth.executeQuery("SELECT * FROM all_users WHERE username = \""+this.username+ "\"");
             if(username_exists.next())
             {
-                
-                //ResultSet user_password = selectFrom("users.db","all_users","username = '"+this.username+"'","","");//auth.executeQuery("SELECT * FROM all_users WHERE username = \""+this.username+ "\"");
                 if(BCrypt.checkpw(this.input_password,username_exists.getString("passw")))
                 {
                     System.out.println("Successfully logged in!");
@@ -71,6 +64,7 @@ public class Users extends DatabaseHandler implements Serializable{
                 {
                     insertInto("users.db","all_users",this.input_username,BCrypt.hashpw(this.input_password, BCrypt.gensalt()),"",0);
                     System.out.println("Successfully added new user.");
+                    this.new_user = true;
                 }
                 else
                     System.out.println("Not quite my input!");
@@ -168,12 +162,6 @@ public class Users extends DatabaseHandler implements Serializable{
         String type = noteOrTodo(hash);
         int type_no = type.equals("todo")?1:0;
         Note note = null;
-        /*FileInputStream obj_file = new FileInputStream("data/"+hash);
-        ObjectInputStream in = new ObjectInputStream(obj_file);
-        if(type.equals("notes"))
-            note = (Note) in.readObject();
-        else
-            note = (ToDo) in.readObject();*/
         note = readFromFile(hash,type_no);
         System.out.println("-------------------------------------------------");
         System.out.println(note.title.toUpperCase());
@@ -249,7 +237,6 @@ public class Users extends DatabaseHandler implements Serializable{
         {
             FileInputStream obj_file = new FileInputStream("data/"+hash);
             ObjectInputStream in = new ObjectInputStream(obj_file);
-            //String type = noteOrTodo(hash);
             if(type == 1)
                 note = (ToDo) in.readObject();
             else if(type == 0)
@@ -326,8 +313,6 @@ public class Users extends DatabaseHandler implements Serializable{
                hash = r.getString("hash_id");
                show(hash);
            }
-           
-           //r.close();
         }
         catch(SQLException e)
         {

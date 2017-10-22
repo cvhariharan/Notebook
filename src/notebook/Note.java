@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package notebook;
 import java.util.*;
 import java.text.*;
@@ -10,7 +5,7 @@ import java.sql.*;
 import java.io.*;
 /**
  *
- * @author thero
+ * @author C.V.Hariharan
  */
 public class Note implements Serializable{
     private LinkedList<String> categories = new LinkedList<String>();
@@ -77,8 +72,6 @@ public class Note implements Serializable{
             if(!categories.contains(hashtag))
             {
                 categories.add(hashtag);
-                /*String sql = "insert into categories values ('"+this.hash+"','"+hashtag+"', '"+this.owner+"', '"+0+"')";
-                DatabaseHandler.executeUpdateDb(sql,"notes.db");*/
                 handler.insertInto("notes.db", "categories", this.hash,hashtag,this.owner,0);
             }
         }

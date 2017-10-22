@@ -1,23 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package notebook;
 import java.util.Scanner;
 import java.io.*;
 /**
  *
- * @author thero
+ * @author C.V.Hariharan
  */
 public class Notebook {
 
-    /**
-     * @param args the command line arguments
-     */
     static Note note;
     public static void main(String[] args) throws IOException {
-        // TODO code application logic here
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         Scanner in = new Scanner(System.in);
         System.out.println("Username: ");
@@ -25,6 +16,8 @@ public class Notebook {
         System.out.println("Password: ");
         String password = in.next();
         Users user = new Users(username,password);
+        if(user.new_user)
+            user = new Users(username,password);
         int input = 0;
         String title;
         String content;
