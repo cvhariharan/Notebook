@@ -53,7 +53,7 @@ public class Note implements Serializable{
         hash = hash.replace("\\", "s");
         hash = hash.replace("/", "s");
         hash = hash.replace(".", "s");
-        this.hash = hash;
+        this.hash = hash.substring(10,25);
         return hash;
     }
     

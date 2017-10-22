@@ -56,7 +56,7 @@ public class ToDo extends Note{
         hash = hash.replace("\\", "s");
         hash = hash.replace("/", "s");
         hash = hash.replace(".", "s");
-        this.hash = hash;
+        this.hash = hash.substring(10,25);
         return hash;
     }
     
