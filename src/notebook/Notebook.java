@@ -72,11 +72,25 @@ public class Notebook {
                     case 2:
                         System.out.println("Title: ");
                         title = reader.readLine();
-                        System.out.println("Content: ");
-                        content = reader.readLine();
                         System.out.println("Category: ");
                         String category = in.next();
-                        user.addTodo(content,title,"",category,false);
+                        content = "";
+                        hash = "";
+                        int i = 0;
+                        do
+                        {
+                        System.out.println("Content (Enter -1 to exit): ");
+                        content = reader.readLine();
+                        if(!content.equals("-1"))
+                        {
+                        
+                        if(i == 0)
+                            hash = user.addTodo(content,title,hash,category,false);
+                        else
+                            hash = user.addTodo(content,title,hash,category,true); 
+                        i++;
+                        }
+                        }while(!content.equals("-1"));
                         break;
                     
                     case 3: 

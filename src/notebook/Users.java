@@ -100,8 +100,9 @@ public class Users extends DatabaseHandler implements Serializable{
         
     }
     
-    public void addTodo(String content,String title,String file_hash,String category,boolean existing)
+    public String addTodo(String content,String title,String file_hash,String category,boolean existing)
     {
+        String hash = null;
         if(!existing)
         {
             try
@@ -110,7 +111,7 @@ public class Users extends DatabaseHandler implements Serializable{
                 ToDo todo = new ToDo(this.username,title);
                 todo.createNote(content);
                 todo.addCategory(category);
-                String hash = todo.hash;
+                hash = todo.hash;
                 System.out.println("Created a Todo with hash: "+hash);
                 insertInto("notes.db","todo",hash,title,this.username,0);
                 writeToFile(todo);
@@ -126,9 +127,11 @@ public class Users extends DatabaseHandler implements Serializable{
                 ToDo todo = (ToDo) readFromFile(file_hash,1);
                 todo.createNote(content);
                 todo.returnContent();
+                hash = todo.hash;
                 writeToFile(todo);
             
         }
+        return hash;
     }
     
     public void delete(String hash)
