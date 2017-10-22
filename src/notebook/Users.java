@@ -145,13 +145,9 @@ public class Users extends DatabaseHandler implements Serializable{
         {
             try
             {
-                FileInputStream obj_file = new FileInputStream("data/"+file_hash);
-                ObjectInputStream in = new ObjectInputStream(obj_file);
-                ToDo todo = (ToDo) in.readObject();
+                ToDo todo = (ToDo) readFromFile(file_hash,1);
                 todo.createNote(content);
                 todo.returnContent();
-                in.close();
-                obj_file.close();
                 FileOutputStream obj_out = new FileOutputStream("data/"+file_hash);
                 ObjectOutputStream out = new ObjectOutputStream(obj_out);
                 out.writeObject(todo);
@@ -161,10 +157,6 @@ public class Users extends DatabaseHandler implements Serializable{
             catch(FileNotFoundException e)
             {
                 System.out.println("You sure the ToDo list exists?");
-                System.out.println(e.getMessage());
-            }
-            catch(ClassNotFoundException e)
-            {
                 System.out.println(e.getMessage());
             }
             catch(IOException e)
@@ -200,123 +192,64 @@ public class Users extends DatabaseHandler implements Serializable{
         {
             e.printStackTrace();
         }
+        
         return table_name;
     }
     
     public void show(String hash)
     {
         String type = noteOrTodo(hash);
+        int type_no = type.equals("todo")?1:0;
         Note note = null;
-        try
-        {
-        FileInputStream obj_file = new FileInputStream("data/"+hash);
+        /*FileInputStream obj_file = new FileInputStream("data/"+hash);
         ObjectInputStream in = new ObjectInputStream(obj_file);
         if(type.equals("notes"))
             note = (Note) in.readObject();
         else
-            note = (ToDo) in.readObject();
+            note = (ToDo) in.readObject();*/
+        note = readFromFile(hash,type_no);
         System.out.println(note.title.toUpperCase());
         System.out.println(note.returnContent());
         System.out.println("Hash: "+note.hash);
-        }
-        catch(ClassNotFoundException e)
-        {
-            e.printStackTrace();
-        }
-        catch(FileNotFoundException e)
-        {
-            e.printStackTrace();
-        }
-        catch(IOException e)
-        {
-            e.printStackTrace();
-        }
     }
-    /*
-    public void showNotes(String category)
+    public void deleteTask(String hash)
     {
-        String sql = "select * from notes where owner = '"+this.username+"'";
-        if(!category.equals("*"))
+        String type = noteOrTodo(hash);
+        FileInputStream obj_file;
+        ObjectInputStream in;
+        if(type.equals("todo"))
         {
-            sql = "select * from categories where category = '"+category+"'"+" and owner = '"+this.username+"' and note = '"+0+"'";
-        }
-        
-        int i = 1;
-        try
-        {
-            Connection notesdb = getDatabase("notes.db",true);
-            Statement stm = notesdb.createStatement();
-            ResultSet results = stm.executeQuery(sql);
-            while(results.next())
+            try
             {
-                FileInputStream obj_file = new FileInputStream("data/"+results.getString("hash_id"));
-                ObjectInputStream in = new ObjectInputStream(obj_file);
-                Note note = (Note) in.readObject();
-                System.out.println(i+"."+note.title.toUpperCase());
-                System.out.println(note.returnContent());
-                System.out.println("Hash: "+note.hash);
-                i++;
-            }
-            notesdb.close();
-            stm.close();
-            results.close();
-        }
-        catch(SQLException e)
-        {
-            System.out.println(e.getMessage());
-        }
-        catch(ClassNotFoundException e)
-        {
-            System.out.println(e.getMessage());
-        }
-        catch(IOException e)
-        {
-            System.out.println(e.getMessage());
-        }
-    }
-    
-    public void showTodos(String category)
-    {
-        String sql = "select * from todo where owner = '"+this.username+"'";
-        if(!category.equals("*"))
-        {
-            sql = "select * from categories where category = '"+category+"'"+" and owner = '"+this.username+"' and note = '"+1+"'";
-        }
-        
-        int i = 1;
-        try
-        {
-            Connection notesdb = getDatabase("notes.db",true);
-            Statement stm = notesdb.createStatement();
-            ResultSet results = stm.executeQuery(sql);
-            while(results.next())
-            {
-                FileInputStream obj_file = new FileInputStream("data/"+results.getString("hash_id"));
-                ObjectInputStream in = new ObjectInputStream(obj_file);
-                ToDo todo = (ToDo) in.readObject();
-                System.out.println(i+"."+todo.title.toUpperCase());
+                obj_file = new FileInputStream("data/"+hash);
+                in = new ObjectInputStream(obj_file);
+                ToDo todo = (ToDo) readFromFile(hash,1);
                 todo.returnContent();
-                System.out.println("Hash: "+todo.hash);
-                i++;
+                System.out.println("Index: ");
+                Scanner sc = new Scanner(System.in);
+                int index = sc.nextInt();
+                todo.deleteNote(index-1);
+                in.close();
+                obj_file.close();
+                ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("data/"+hash));
+                out.writeObject(todo);
+                out.close();
             }
-            notesdb.close();
-            stm.close();
-            results.close();
-        }
-        catch(SQLException e)
-        {
-            System.out.println(e.getMessage());
-        }
-        catch(ClassNotFoundException e)
-        {
-            System.out.println(e.getMessage());
-        }
-        catch(IOException e)
-        {
-            System.out.println(e.getMessage());
+            catch(ClassNotFoundException e)
+            {
+                e.printStackTrace();
+            }
+            catch(FileNotFoundException e)
+            {
+                e.printStackTrace();
+            }
+            catch(IOException e)
+            {
+                e.printStackTrace();
+            }
         }
     }
-    */
+   
     public void showAll(String category,int type) //0-Note,1-Todo
     {
         String table_name = (type==1)?"todo":"notes"; 
@@ -336,12 +269,13 @@ public class Users extends DatabaseHandler implements Serializable{
             Note note = null;
             while(results.next())
             {
-                FileInputStream obj_file = new FileInputStream("data/"+results.getString("hash_id"));
+                /*FileInputStream obj_file = new FileInputStream("data/"+results.getString("hash_id"));
                 ObjectInputStream in = new ObjectInputStream(obj_file);
                 if(type == 0)
                     note = (Note) in.readObject();
                 else if(type == 1)
-                    note = (ToDo) in.readObject();
+                    note = (ToDo) in.readObject();*/
+                note = readFromFile(results.getString("hash_id"),type);
                 System.out.println(i+"."+note.title.toUpperCase());
                 System.out.println(note.returnContent());
                 System.out.println("Hash: "+note.hash);
@@ -359,9 +293,39 @@ public class Users extends DatabaseHandler implements Serializable{
         {
             System.out.println(e.getMessage());
         }
+    }
+    
+    public Note readFromFile(String hash,int type)
+    {
+        Note note = null;
+        try
+        {
+            FileInputStream obj_file = new FileInputStream("data/"+hash);
+            ObjectInputStream in = new ObjectInputStream(obj_file);
+            //String type = noteOrTodo(hash);
+            if(type == 1)
+                note = (ToDo) in.readObject();
+            else if(type == 0)
+                note = (Note) in.readObject();
+            in.close();
+            obj_file.close();
+        }
+        catch(ClassNotFoundException e)
+        {
+                e.printStackTrace();
+        }
+        catch(FileNotFoundException e)
+        {
+                e.printStackTrace();
+        }
         catch(IOException e)
         {
-            System.out.println(e.getMessage());
+                e.printStackTrace();
         }
+        return note;
+    }
+    public void writeToFile(String hash)
+    {
+        
     }
 }

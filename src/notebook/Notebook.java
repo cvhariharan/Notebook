@@ -76,7 +76,7 @@ public class Notebook {
                         content = reader.readLine();
                         System.out.println("Category: ");
                         String category = in.next();
-                        user.addTodo(content,title,category,"",false);
+                        user.addTodo(content,title,"",category,false);
                         break;
                     
                     case 3: 
@@ -94,6 +94,9 @@ public class Notebook {
                         break;
                     
                     case 5:
+                        System.out.println("Hash: ");
+                        hash = in.next();
+                        user.deleteTask(hash);
                         break;
                         
                     case 6:
@@ -112,7 +115,7 @@ public class Notebook {
                     case 9:
                         System.out.println("Category: ");
                         String cate = in.next();
-                        user.showAll("#note.", 0);
+                        user.showAll(cate, 0);
                         user.showAll(cate, 1);
                         break;
                         
