@@ -156,11 +156,11 @@ public class DatabaseHandler {
         }
         catch(ClassNotFoundException e)
         {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
         return results;
     }
@@ -179,11 +179,11 @@ public class DatabaseHandler {
         }
         catch(ClassNotFoundException e)
         {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 }

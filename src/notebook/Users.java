@@ -78,11 +78,11 @@ public class Users extends DatabaseHandler implements Serializable{
         }
         catch(SQLException s)
         {
-            s.printStackTrace();
+            System.out.println(s.getMessage());
         }
         catch(ClassNotFoundException c)
         {
-            c.printStackTrace();
+            System.out.println(c.getMessage());
         }
         return true;
     }
@@ -157,7 +157,7 @@ public class Users extends DatabaseHandler implements Serializable{
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
         
         return table_name;
@@ -259,15 +259,15 @@ public class Users extends DatabaseHandler implements Serializable{
         }
         catch(ClassNotFoundException e)
         {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
         }
         catch(FileNotFoundException e)
         {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
         }
         catch(IOException e)
         {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
         }
         return note;
     }
@@ -288,7 +288,7 @@ public class Users extends DatabaseHandler implements Serializable{
         }
         catch(IOException e)
         {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
     
