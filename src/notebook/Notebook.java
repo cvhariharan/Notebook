@@ -28,9 +28,6 @@ public class Notebook {
         if(user.new_user)
             user = new Users(username,password);
         int input = 0;
-        String title;
-        String content;
-        String hash;
         if(user.logged_in)
         {
             
