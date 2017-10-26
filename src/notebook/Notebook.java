@@ -65,8 +65,7 @@ public class Notebook {
         option.addOption("s",false,"Show a specific note or Todo list.");
         option.addOption("e",false,"Edit note with given hash.");
         option.addOption("exit",false,"Exit");
-        HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp( "Notebook", option );
+        option.addOption("h",false,"Help");
         System.out.print("Arguments: ");
         String input = in.next() + in.nextLine();
         String[] arguments = input.split("\\s+(?=([^\"]*\"[^\"]*\")*[^\"]*$)"); //Regex to select all whitespaces except the ones in between double quotes
@@ -107,6 +106,11 @@ public class Notebook {
                     i++;
                 }
             } while (!content.equals("-1"));
+        }
+        if(cmdline.hasOption("h"))
+        {
+            HelpFormatter formatter = new HelpFormatter();
+            formatter.printHelp("Notebook", option);
         }
         if(cmdline.hasOption("a"))
         {
@@ -169,5 +173,6 @@ public class Notebook {
         {
             System.exit(0);
         }
+        parse(user);
     }
 }
