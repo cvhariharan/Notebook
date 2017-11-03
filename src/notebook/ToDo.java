@@ -12,9 +12,10 @@ public class ToDo extends Note{
     private SimpleDateFormat date_format = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
     private Timestamp timestamp;
     private String content;
-    ToDo(String username,String title)
+    private String email;
+    ToDo(String username,String title,String email)
     {
-        super(username,title);
+        super(username,title,email);
         timestamp = new Timestamp(System.currentTimeMillis());
         date_time = date_format.format(timestamp);
         this.owner = username;
@@ -24,7 +25,7 @@ public class ToDo extends Note{
     @Override
     public void createNote(String content)
     {
-        Note note = new Note(this.owner,this.title);
+        Note note = new Note(this.owner,this.title,this.email);
         note.createNote(content);
         note_links.add(note);
     }

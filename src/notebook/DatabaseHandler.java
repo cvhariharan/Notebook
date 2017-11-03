@@ -35,7 +35,7 @@ public class DatabaseHandler {
         {
             Statement stm = conn.createStatement();
             if(!notedb)
-                stm.execute("create table if not exists all_users (username text, passw text)");
+                stm.execute("create table if not exists all_users (username text, passw text,email text)");
             else
             {
                 stm.execute("create table if not exists notes (hash_id text, title text, owner text)");
@@ -66,7 +66,7 @@ public class DatabaseHandler {
                 sql = "insert into "+table_name+" values ('"+param1+"', '"+param2+"', '"+param3+"')";
             }
             else
-                sql = "insert into "+table_name+" values ('"+param1+"', '"+param2+"')";
+                sql = "insert into "+table_name+" values ('"+param1+"', '"+param2+"', '"+param3+"')";
             stm.executeUpdate(sql);
             stm.close();
             conn.close();

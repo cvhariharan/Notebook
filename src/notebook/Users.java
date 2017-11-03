@@ -12,6 +12,7 @@ public class Users extends DatabaseHandler implements Serializable{
     private String username;
     private String password;
     private String plain_password;
+    private String email;
     private Connection conn;
     private Connection notesdb;
     public boolean logged_in = false;
@@ -44,6 +45,7 @@ public class Users extends DatabaseHandler implements Serializable{
             {
                 if(BCrypt.checkpw(this.input_password,username_exists.getString("passw")))
                 {
+                    this.email = username_exists.getString("email");
                     System.out.println("Successfully logged in!");
                     notesdb = getDatabase("notes.db",true);
                     logged_in = true;
@@ -57,12 +59,14 @@ public class Users extends DatabaseHandler implements Serializable{
             }
             else
             {
+                System.out.println("Email Address(Will be used to send reminders): ");
+                String email = sc.next();
                 System.out.println("Add user(y/n):");
                 String in = sc.next();
                 in = in.toLowerCase();
                 if(in.equals("y"))
                 {
-                    insertInto("users.db","all_users",this.input_username,BCrypt.hashpw(this.input_password, BCrypt.gensalt()),"",0);
+                    insertInto("users.db","all_users",this.input_username,BCrypt.hashpw(this.input_password, BCrypt.gensalt()),email,0);
                     System.out.println("Successfully added new user.");
                     this.new_user = true;
                 }
@@ -83,7 +87,7 @@ public class Users extends DatabaseHandler implements Serializable{
     
     public void addNote(String content, String title)
     {
-        Note note = new Note(this.username,title);
+        Note note = new Note(this.username,title,this.email);
         note.createNote(content);
         note.title = title;
         String hash = note.hash;
@@ -102,7 +106,7 @@ public class Users extends DatabaseHandler implements Serializable{
             try
             {
                 Connection notesdb = getDatabase("notes.db",true);
-                ToDo todo = new ToDo(this.username,title);
+                ToDo todo = new ToDo(this.username,title,this.email);
                 todo.createNote(content);
                 todo.addCategory(category);
                 hash = todo.hash;
